@@ -1,0 +1,47 @@
+
+----------------------------------- Without CORS -------------------------
+
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  var keys = Object.keys(data[0]);
+
+  // Add header if empty
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(keys);
+  }
+
+  // Add each row
+  data.forEach(row => {
+    sheet.appendRow(keys.map(k => row[k]));
+  });
+
+  return ContentService.createTextOutput("Success");
+}
+
+
+
+----------------------------------- With CORS -------------------------
+
+
+
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  var keys = Object.keys(data[0]);
+
+  // Append header if needed
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(keys);
+  }
+
+  data.forEach(row => {
+    sheet.appendRow(keys.map(k => row[k]));
+  });
+
+  // Add CORS headers
+  return ContentService
+    .createTextOutput("Success")
+    .setMimeType(ContentService.MimeType.TEXT)
+    .setHeader("Access-Control-Allow-Origin", "*");
+}
