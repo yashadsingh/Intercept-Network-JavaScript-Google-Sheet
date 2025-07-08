@@ -2,7 +2,7 @@
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwvFesU-gl5Ymdh2SrpsGFTcnixdVmw86WT2BpU4QqZobcotpF0boPnnu99EKFPofYf/exec";
 
 function sendToGoogleSheet(dataArray, sheetName) {
-    debugger;
+
    const payload = {
     TabSelected: sheetName,
     data: dataArray
@@ -61,7 +61,7 @@ function sendToGoogleSheet(dataArray, sheetName) {
       const responseText = this.responseText;
       const json = JSON.parse(responseText);
       console.log("[XHR Response]", json);
-        debugger;
+    
       sendToGoogleSheet(json.leadDetail, tabName);
     } catch (err) {
       console.error("[XHR] Failed to parse request or response", err);
