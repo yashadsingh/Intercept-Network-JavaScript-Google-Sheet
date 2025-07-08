@@ -1,5 +1,5 @@
 
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxWHesWtOjssm0t6NDiXxxBKZqtty6Z2zjKEyD00koCvRwoyLz_yN3JSxMXpIfCuf_x/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyALSZUkgizStNVvk7Ph2JXfUAVITMRHhqGr03Dfh896o3p7xPMqY9LlgqIQSNqIJpl/exec";
 
 function sendToGoogleSheet(dataArray) {
    debugger;
