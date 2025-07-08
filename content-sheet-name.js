@@ -1,8 +1,10 @@
+
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwvFesU-gl5Ymdh2SrpsGFTcnixdVmw86WT2BpU4QqZobcotpF0boPnnu99EKFPofYf/exec";
 
-function sendToGoogleSheet(dataArray) {
+function sendToGoogleSheet(dataArray, sheetName) {
+    debugger;
    const payload = {
-    TabSelected: "YASI-Test",
+    TabSelected: sheetName,
     data: dataArray
   };
   fetch(GOOGLE_SCRIPT_URL, {
@@ -16,16 +18,6 @@ function sendToGoogleSheet(dataArray) {
   .catch(console.error);
 }
 
-function saveToFile(data, filename = "leads.json") {
-    debugger;
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
 
 (() => {
   const originalFetch = window.fetch;
@@ -57,21 +49,27 @@ function saveToFile(data, filename = "leads.json") {
     return open.apply(this, arguments);
   };
 
-  originalXHR.prototype.send = function () {
-    this.addEventListener("load", function () {
-      if (this._url.includes("/leads/list") && this._method === "POST") {
-        try {
-          const responseText = this.responseText;
-          const json = JSON.parse(responseText);
-          console.log("%c[Leads API Response - XHR]", "color: blue; font-weight: bold;");          
-          sendToGoogleSheet(json.leadDetail);
-        } catch (err) {
-          console.error("[Error parsing XHR response]", err);
-        }
-      }
-    });
+  originalXHR.prototype.send = function (body) {
+  this._requestBody = body;  // 💾 Save request payload for later access
+
+  this.addEventListener("load", function () {
+    // ✅ Now you can access it here
+    try {
+      const parsedRequest = JSON.parse(this._requestBody);
+      const tabName = parsedRequest.TabSelected || "DefaultTab";
+
+      const responseText = this.responseText;
+      const json = JSON.parse(responseText);
+      console.log("[XHR Response]", json);
+        debugger;
+      sendToGoogleSheet(json.leadDetail, tabName);
+    } catch (err) {
+      console.error("[XHR] Failed to parse request or response", err);
+    }
+  });
     return send.apply(this, arguments);
   };
 
   console.log("%c[Leads Monitor Activated]", "color: purple; font-weight: bold;");
 })();
+
