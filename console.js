@@ -2,7 +2,7 @@
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyALSZUkgizStNVvk7Ph2JXfUAVITMRHhqGr03Dfh896o3p7xPMqY9LlgqIQSNqIJpl/exec";
 
 function sendToGoogleSheet(dataArray) {
-   debugger;
+   
   fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",
     mode: "no-cors",
@@ -15,7 +15,7 @@ function sendToGoogleSheet(dataArray) {
 }
 
 function saveToFile(data, filename = "leads.json") {
-    debugger;
+   
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
